@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Responsive meta tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recyclable.io - Home</title>
+    <style>
+      /* Basic reset and box-sizing */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #a8e6cf, #56ab2f);
+        color: #333;
+        min-height: 100vh;
+      }
+      /* All screens are hidden by default */
+      .screen {
+        display: none;
+        padding: 20px;
+      }
+      /* Home Screen Styling */
+      #home-screen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+      }
+      #home-screen .emoji {
+        font-size: 10rem;
+        margin-bottom: 20px;
+      }
+      #home-screen h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: #388E3C;
+      }
+      #home-screen button {
+        background: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin: 10px;
+      }
+      #home-screen button:hover {
+        background: #388E3C;
+      }
+      /* About Screen Styling */
+      #about-screen {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        text-align: center;
+      }
+      #about-screen h2 {
+        color: #388E3C;
+        margin-bottom: 15px;
+      }
+      #about-screen p {
+        font-size: 1.1rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+      /* Navigation button */
+      .nav-btn {
+        background: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin-top: 10px;
+      }
+      .nav-btn:hover {
+        background: #388E3C;
+      }
+      /* Game Screen Styling (existing game code) */
+      .main-container {
+        background: #fff;
+        width: 100%;
+        max-width: 900px;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        padding: 30px;
+        margin: auto;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .left-panel, .right-panel {
+        padding: 10px;
+      }
+      .left-panel {
+        flex: 2;
+        text-align: center;
+      }
+      .right-panel {
+        flex: 1;
+        border-left: 2px solid #eee;
+        max-height: 500px;
+        overflow-y: auto;
+      }
+      h1, h2 {
+        color: #388E3C;
+      }
+      h1 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+      }
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+      }
+      button {
+        background: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 12px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin: 10px;
+      }
+      button:hover {
+        background: #388E3C;
+      }
+      #webcam-container {
+        margin: 20px auto;
+      }
+      #webcam-container video,
+      #webcam-container canvas {
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      }
+      /* Modal styling */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.7);
+      }
+      .modal-content {
+        background: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 300px;
+        text-align: center;
+      }
+      .modal-content img {
+        max-width: 100%;
+        border: 5px solid #4CAF50;
+        border-radius: 10px;
+      }
+      .modal-content p {
+        font-size: 1.2rem;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #333;
+      }
+      .close-btn {
+        background: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+      .close-btn:hover {
+        background: #388E3C;
+      }
+      /* Scoreboard and leaderboard styling */
+      .scoreboard {
+        text-align: left;
+      }
+      .scoreboard p {
+        font-size: 1.1rem;
+        margin: 8px 0;
+      }
+      .scoreboard span {
+        font-weight: bold;
+      }
+      #label-container {
+        margin-top: 20px;
+      }
+      .label-bar {
+        background: #f0f0f0;
+        border-radius: 4px;
+        margin: 10px auto;
+        width: 100%;
+        height: 30px;
+        position: relative;
+        overflow: hidden;
+      }
+      .label-bar-fill {
+        background: #4CAF50;
+        height: 100%;
+        width: 0%;
+        transition: width 0.5s ease;
+      }
+      .label-text {
+        position: absolute;
+        top: 0;
+        left: 10px;
+        line-height: 30px;
+        color: #fff;
+        font-weight: bold;
+        z-index: 2;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+      }
+      .leaderboard {
+        margin-top: 20px;
+        text-align: left;
+      }
+      .leaderboard h3 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+        color: #388E3C;
+      }
+      .leaderboard ol {
+        padding-left: 20px;
+      }
+      .leaderboard li {
+        font-size: 1rem;
+        margin-bottom: 5px;
+      }
+      @media (max-width: 600px) {
+        .main-container {
+          flex-direction: column;
+          align-items: center;
+        }
+        .right-panel {
+          border-left: none;
+          border-top: 2px solid #eee;
+          width: 100%;
+          margin-top: 20px;
+          max-height: none;
+          overflow: visible;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Home Screen -->
+    <div id="home-screen" class="screen">
+      <div class="emoji">♻️</div>
+      <h1>Recyclable.io</h1>
+      <button onclick="showScreen('game-screen')">Play</button>
+      <button onclick="showScreen('about-screen')">About</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+      <div class="main-container">
+        <div class="left-panel">
+          <h1>Recyclable.io</h1>
+          <!-- Start Webcam button -->
+          <button type="button" id="start-btn" onclick="init()">Start Webcam</button>
+          <!-- Capture button -->
+          <button type="button" id="capture-btn" onclick="capture()" style="display: none;">Capture</button>
+          <!-- Toggle Camera button (only visible on mobile) -->
+          <button type="button" id="toggle-camera" onclick="toggleCamera()">Toggle Camera</button>
+          <div id="webcam-container"></div>
+          <!-- Modal for captured image and result -->
+          <div id="modal" class="modal">
+            <div class="modal-content">
+              <img id="captured-image" src="" alt="Captured Image" />
+              <p id="result-text"></p>
+              <button class="close-btn" onclick="closeModal()">Close</button>
+            </div>
+          </div>
+          <!-- Prediction bars -->
+          <div id="label-container"></div>
+        </div>
+        <div class="right-panel">
+          <h2>Your Score</h2>
+          <div class="scoreboard" id="scoreboard">
+            <p>Cans: <span id="score-cans">0</span></p>
+            <p>Plastic: <span id="score-plastic">0</span></p>
+            <p>Glass: <span id="score-glass">0</span></p>
+            <p>Paper: <span id="score-paper">0</span></p>
+            <p>Cardboard: <span id="score-cardboard">0</span></p>
+            <p>Total Score: <span id="score-total">0</span></p>
+          </div>
+          <div class="leaderboard" id="global-leaderboard">
+            <h3>Global Leaderboard</h3>
+            <ol id="leaderboard-list"></ol>
+            <button type="button" onclick="loadLeaderboard()">Refresh Leaderboard</button>
+          </div>
+          <button class="nav-btn" onclick="showScreen('home-screen')">Back to Home</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Screen -->
+    <div id="about-screen" class="screen">
+      <h2>About Recyclable.io</h2>
+      <p>
+        Recyclable.io is a fun, interactive game that uses your webcam and a Teachable Machine model to identify recyclable objects.
+        Score points by correctly identifying items like cans, plastic, glass, paper, and cardboard, and compete on a global leaderboard!
+      </p>
+      <button class="nav-btn" onclick="showScreen('home-screen')">Back to Home</button>
+    </div>
+
+    <!-- JavaScript for screen navigation and game functionality -->
+    <script>
+      // Function to hide all screens and show only the selected one
+      function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+          screen.style.display = 'none';
+        });
+        document.getElementById(screenId).style.display = 'block';
+      }
+
+      // ======== Game Code (from your previous version) ========
+
+      const URL = 'https://teachablemachine.withgoogle.com/models/rVWTvKLNQ/';
+      let model, webcam, labelContainer, maxPredictions;
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+      let currentFacingMode = "user";
+      let scores = { cans: 0, plastic: 0, glass: 0, paper: 0, cardboard: 0 };
+
+      function loadScores() {
+        const savedScores = localStorage.getItem("scores");
+        if (savedScores) {
+          scores = JSON.parse(savedScores);
+          updateScoreboard();
+        }
+      }
+
+      function updateScoreboard() {
+        document.getElementById('score-cans').textContent = scores.cans;
+        document.getElementById('score-plastic').textContent = scores.plastic;
+        document.getElementById('score-glass').textContent = scores.glass;
+        document.getElementById('score-paper').textContent = scores.paper;
+        document.getElementById('score-cardboard').textContent = scores.cardboard;
+        const total = scores.cans + scores.plastic + scores.glass + scores.paper + scores.cardboard;
+        document.getElementById('score-total').textContent = total;
+        localStorage.setItem("scores", JSON.stringify(scores));
+      }
+
+      async function submitScore(playerName, score) {
+        try {
+          await firebase.firestore().collection("leaderboard").add({
+            name: playerName,
+            score: score,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          console.log("Score submitted!");
+        } catch (error) {
+          console.error("Error submitting score: ", error);
+        }
+      }
+
+      async function loadLeaderboard() {
+        try {
+          const leaderboardRef = firebase.firestore().collection("leaderboard").orderBy("score", "desc").limit(10);
+          const snapshot = await leaderboardRef.get();
+          let leaderboardHtml = "";
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            leaderboardHtml += `<li>${data.name}: ${data.score}</li>`;
+          });
+          document.getElementById("leaderboard-list").innerHTML = leaderboardHtml;
+        } catch (error) {
+          console.error("Error loading leaderboard: ", error);
+        }
+      }
+
+      async function init() {
+        loadScores();
+        console.log("Initializing model and webcam...");
+        const modelURL = URL + 'model.json';
+        const metadataURL = URL + 'metadata.json';
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+        console.log("Model loaded with", maxPredictions, "classes.");
+        await initWebcam();
+
+        labelContainer = document.getElementById('label-container');
+        labelContainer.innerHTML = "";
+        for (let i = 0; i < maxPredictions; i++) {
+          const barContainer = document.createElement('div');
+          barContainer.classList.add('label-bar');
+          const barFill = document.createElement('div');
+          barFill.classList.add('label-bar-fill');
+          const barText = document.createElement('div');
+          barText.classList.add('label-text');
+          barText.innerHTML = "";
+          barContainer.appendChild(barFill);
+          barContainer.appendChild(barText);
+          labelContainer.appendChild(barContainer);
+        }
+        window.requestAnimationFrame(loop);
+        document.getElementById('start-btn').style.display = 'none';
+        document.getElementById('capture-btn').style.display = 'inline-block';
+      }
+
+      async function initWebcam() {
+        const flip = true;
+        const width = 200;
+        const height = 200;
+        if (webcam) {
+          webcam.stop();
+          document.getElementById("webcam-container").innerHTML = "";
+        }
+        webcam = new tmImage.Webcam(width, height, flip, currentFacingMode);
+        await webcam.setup();
+        if (isMobile) {
+          document.getElementById('webcam-container').appendChild(webcam.webcam);
+          const webCamVideo = document.getElementsByTagName('video')[0];
+          webCamVideo.setAttribute("playsinline", true);
+          webCamVideo.muted = "true";
+          webCamVideo.style.width = width + 'px';
+          webCamVideo.style.height = height + 'px';
+        } else {
+          document.getElementById("webcam-container").appendChild(webcam.canvas);
+        }
+        webcam.play();
+      }
+
+      async function toggleCamera() {
+        if (!isMobile) {
+          console.log("Toggle camera is disabled on desktop devices.");
+          return;
+        }
+        if (webcam) {
+          webcam.stop();
+        }
+        currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+        await initWebcam();
+      }
+
+      async function loop() {
+        webcam.update();
+        await predict();
+        window.requestAnimationFrame(loop);
+      }
+
+      async function predict() {
+        let prediction;
+        if (isMobile) {
+          prediction = await model.predict(webcam.webcam);
+        } else {
+          prediction = await model.predict(webcam.canvas);
+        }
+        for (let i = 0; i < maxPredictions; i++) {
+          const probability = prediction[i].probability;
+          const percentage = (probability * 100).toFixed(0);
+          const barContainer = labelContainer.childNodes[i];
+          const barFill = barContainer.querySelector('.label-bar-fill');
+          const barText = barContainer.querySelector('.label-text');
+          barFill.style.width = percentage + '%';
+          barText.innerHTML = prediction[i].className + ': ' + percentage + '%';
+        }
+      }
+
+      async function capture() {
+        console.log("Capture button clicked.");
+        document.getElementById('capture-btn').style.display = 'none';
+        try {
+          const photoUri = webcam.canvas.toDataURL("image/jpeg", 0.7);
+          console.log("Captured photo URI:", photoUri);
+          document.getElementById('captured-image').src = photoUri;
+
+          const tempImg = new Image();
+          tempImg.src = photoUri;
+          tempImg.onload = async function() {
+            const prediction = await model.predict(tempImg);
+            let bestResult = prediction[0];
+            for (let i = 1; i < prediction.length; i++) {
+              if (prediction[i].probability > bestResult.probability) {
+                bestResult = prediction[i];
+              }
+            }
+            const percentage = Math.round(bestResult.probability * 100);
+            document.getElementById('result-text').textContent = "This object is an " + bestResult.className + " (" + percentage + "%)";
+            document.getElementById('modal').style.display = 'block';
+
+            const category = bestResult.className.toLowerCase();
+            if (scores.hasOwnProperty(category)) {
+              scores[category]++;
+            }
+            updateScoreboard();
+
+            const playerName = localStorage.getItem("playerName") || "Anonymous";
+            const totalScore = scores.cans + scores.plastic + scores.glass + scores.paper + scores.cardboard;
+            await submitScore(playerName, totalScore);
+            loadLeaderboard();
+          };
+        } catch (error) {
+          console.error("Error capturing photo:", error);
+        }
+      }
+
+      function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('capture-btn').style.display = 'inline-block';
+      }
+
+      window.onload = function() {
+        if (!isMobile) {
+          document.getElementById("toggle-camera").style.display = "none";
+        }
+        const storedName = localStorage.getItem("playerName");
+        if (!storedName) {
+          const playerName = prompt("Please enter your nickname:");
+          localStorage.setItem("playerName", playerName ? playerName : "Anonymous");
+        }
+      };
+    </script>
+  </body>
+</html>
